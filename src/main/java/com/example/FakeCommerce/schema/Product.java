@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,10 +19,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "products")
-public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //auto_increment for mysql
-    private Long id;
+public class Product extends BaseEntity{
     @Column(nullable = false)
     private String title;
     @Column(columnDefinition = "TEXT")
@@ -28,6 +27,9 @@ public class Product {
     @Column(nullable = false)
     private String price;
     private String image;
-    private String category;
+
+    @ManyToOne
+    @JoinColumn(nullable = false, name = "category_id")
+    private Category category;
     private String rating;
 }

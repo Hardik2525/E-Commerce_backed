@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.FakeCommerce.dtos.CreateProductRequestDto;
@@ -37,8 +38,14 @@ public class ProductController {
         productService.deleteProduct(id);
     }
 
-    @GetMapping("/category/{category}")
-    public List<Product> getProductByCategory(@PathVariable String category){
+    @GetMapping("/search")
+    public List<Product> getProductByCategory(@RequestParam("categoryName") String category){
         return productService.getProductByCategory(category);
+    }
+
+    //get all unique categories
+    @GetMapping("/categories")
+    public List<String> getAllUniqueCategories(){
+        return productService.getAllUniqueCategories();
     }
 }
