@@ -9,4 +9,4 @@ spring:
   jpa:
     show-sql: true
     hibernate:      # <--- Changed to lowercase "h"
-      ddl-auto: create
+      ddl-auto: update
