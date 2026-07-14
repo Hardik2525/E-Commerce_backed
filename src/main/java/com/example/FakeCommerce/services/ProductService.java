@@ -2,9 +2,10 @@ package com.example.FakeCommerce.services;
 
 import org.springframework.stereotype.Service;
 
+import com.example.FakeCommerce.dtos.CreateProductRequestDto;
 import com.example.FakeCommerce.repositories.ProductRepository;
 import com.example.FakeCommerce.schema.Product;
-import lombok.Data;
+
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductService {
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
     public List<Product> getAllProducts(){
         return productRepository.findAll();
     }
@@ -20,6 +21,20 @@ public class ProductService {
     public Product geProductById(Long id){
         return productRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Prodcut not found"));
+    }
+
+    public Product createProduct(CreateProductRequestDto requestDto){
+
+        Product newProduct = Product.builder()
+        .title(requestDto.getTitle())
+        .description(requestDto.getDescription())
+        .price(requestDto.getPrice())
+        .image(requestDto.getImage())
+        .category(requestDto.getCategory())
+        .rating(requestDto.getRating())
+        .build();
+
+        return productRepository.save(newProduct);
     }
     
 }
