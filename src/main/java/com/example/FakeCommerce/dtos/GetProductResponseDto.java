@@ -1,21 +1,23 @@
 package com.example.FakeCommerce.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import java.math.*;
-import lombok.NoArgsConstructor;
+import java.math.BigDecimal;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-public class CreateProductRequestDto {
+@SuperBuilder
+public class GetProductResponseDto {
     private Long id;
     private String title;
     private String description;
     private BigDecimal price;
     private String image;
-    private Long categoryId;
     private String rating;
 }

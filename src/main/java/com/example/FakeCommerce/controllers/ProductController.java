@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.FakeCommerce.dtos.CreateProductRequestDto;
+import com.example.FakeCommerce.dtos.GetProductResponseDto;
+import com.example.FakeCommerce.dtos.GetProductWithDetailedResponseDto;
 import com.example.FakeCommerce.schema.Product;
 import java.util.*;
 
@@ -24,7 +26,7 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public List<Product> getAllProducts(){
+    public List<GetProductResponseDto> getAllProducts(){
         return productService.getAllProducts();
     }
 
@@ -39,8 +41,18 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public List<Product> getProductByCategory(@RequestParam("categoryName") String category){
-        return productService.getProductByCategory(category);
+    public List<Product> getProductByCategory(@RequestParam("categoryId") Long categoryId){
+        return productService.getProductByCategory(categoryId);
+    }
+
+    @GetMapping("/{id}/details")
+    public GetProductWithDetailedResponseDto getProductWithDetailsById(@PathVariable Long id){
+        return productService.getProductWithDetailsById(id);
+    }
+
+    @GetMapping("/{id}")
+    public Product getProductById(@PathVariable Long id){
+        return productService.geProductById(id);
     }
 
     //get all unique categories
