@@ -16,12 +16,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "products")
+@SQLDelete(sql = "UPDATE products SET deleted_at=CURRENT_TIMESTAMP where id=?")
+@SQLRestriction("deleted_at is null")
 public class Product extends BaseEntity{
     @Column(nullable = false)
     private String title;

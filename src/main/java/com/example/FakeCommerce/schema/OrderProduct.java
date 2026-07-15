@@ -11,11 +11,15 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Table;
 
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Table(name= "order_products")
+@SQLDelete(sql = "UPDATE order_products SET deleted_at=CURRENT_TIMESTAMP where id=?")
+@SQLRestriction("deleted_at is null")
 public class OrderProduct extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
