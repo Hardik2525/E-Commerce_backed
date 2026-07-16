@@ -1,5 +1,6 @@
 package com.example.FakeCommerce.schema;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,5 +17,6 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLDelete(sql = "UPDATE orders SET deleted_at=CURRENT_TIMESTAMP where id=?")
 @SQLRestriction("deleted_at is null")
 public class Order extends BaseEntity {
-    private OrderStatus orderStatus;
+    
+    private OrderStatus Status;
 }

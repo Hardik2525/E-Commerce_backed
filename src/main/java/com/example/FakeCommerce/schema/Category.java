@@ -23,6 +23,6 @@ import lombok.NoArgsConstructor;
 @SQLDelete(sql = "UPDATE categories SET deleted_at=CURRENT_TIMESTAMP where id=?")
 @SQLRestriction("deleted_at is null")
 public class Category extends BaseEntity{
-
+    @Column(nullable = false)
     private String name;
 }
