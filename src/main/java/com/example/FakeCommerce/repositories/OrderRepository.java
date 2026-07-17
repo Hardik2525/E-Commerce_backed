@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.config.JpaRepositoryConfigExtensi
 import org.springframework.stereotype.Repository;
 import com.example.FakeCommerce.schema.Order;
 
+
+
 @Repository
 public interface OrderRepository extends JpaRepository<Order , Long> {
 

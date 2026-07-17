@@ -3,6 +3,7 @@ package com.example.FakeCommerce.services;
 import org.springframework.stereotype.Service;
 
 import com.example.FakeCommerce.dtos.CreateCategoryRequestDto;
+import com.example.FakeCommerce.exceptions.ResourceNotFoundException;
 import com.example.FakeCommerce.repositories.CategoryRepository;
 import com.example.FakeCommerce.schema.Category;
 import java.util.List;
@@ -27,7 +28,7 @@ public class CategoryService {
 
     public Category getCategoryById(Long id){
         return categoryRepository.findById(id)
-        .orElseThrow(()->new RuntimeException("Category not found"));
+        .orElseThrow(()->new ResourceNotFoundException("Category not found"));
     }
 
     public void deleteCategory(Long id){
