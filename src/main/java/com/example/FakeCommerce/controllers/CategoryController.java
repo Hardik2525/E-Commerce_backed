@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.FakeCommerce.dtos.CreateCategoryRequestDto;
 import com.example.FakeCommerce.services.CategoryService;
+import com.example.FakeCommerce.utils.ApiResponse;
 import com.example.FakeCommerce.schema.*;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
@@ -25,10 +26,11 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody CreateCategoryRequestDto requestDto){
+    public ResponseEntity<ApiResponse<Category>> createCategory(@RequestBody CreateCategoryRequestDto requestDto){
+        Category category = categoryService.createCategory(requestDto);
         return ResponseEntity
         .status(HttpStatus.CREATED).
-        body(categoryService.createCategory(requestDto))
+        body(ApiResponse.success(category,"Category created successfully"))
         ;
     }
 
