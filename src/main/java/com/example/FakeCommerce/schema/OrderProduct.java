@@ -5,6 +5,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Data;
 import jakarta.persistence.FetchType;
@@ -17,6 +18,7 @@ import org.hibernate.annotations.SQLRestriction;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 @Table(name= "order_products")
 @SQLDelete(sql = "UPDATE order_products SET deleted_at=CURRENT_TIMESTAMP where id=?")
 @SQLRestriction("deleted_at is null")
