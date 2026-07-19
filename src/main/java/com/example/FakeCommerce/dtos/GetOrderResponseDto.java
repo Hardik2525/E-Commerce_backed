@@ -8,6 +8,8 @@ import lombok.experimental.SuperBuilder;
 
 import lombok.Setter;
 import java.math.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.NoArgsConstructor;
 
@@ -17,5 +19,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @Setter
 public class GetOrderResponseDto {
-    private OrderStatus Status;
+    private Long id;
+    private OrderStatus status;
+    private List<OrderItemResponseDto> items; 
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

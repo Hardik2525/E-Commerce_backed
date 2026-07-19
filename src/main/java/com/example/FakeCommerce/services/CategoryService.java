@@ -2,7 +2,9 @@ package com.example.FakeCommerce.services;
 
 import org.springframework.stereotype.Service;
 
+import com.example.FakeCommerce.adapters.OrderAdapter;
 import com.example.FakeCommerce.dtos.CreateCategoryRequestDto;
+import com.example.FakeCommerce.dtos.GetCategoryResponseDto;
 import com.example.FakeCommerce.exceptions.ResourceNotFoundException;
 import com.example.FakeCommerce.repositories.CategoryRepository;
 import com.example.FakeCommerce.schema.Category;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+    private final OrderAdapter orderAdapter;
 
     public Category createCategory(CreateCategoryRequestDto createCategory) {
         Category category = Category.builder()
@@ -22,8 +25,11 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
-    public List<Category> getAllCategories(){
-        return categoryRepository.findAll();
+    public List<GetCategoryResponseDto> getAllCategories(){
+        List<Category> categories =  categoryRepository.findAll();
+        // List<category> to List<GetCategoryResponseDto>
+        return orderAdapter.mapToCategoryResponseDtoList(categories);
+
     }
 
     public Category getCategoryById(Long id){
