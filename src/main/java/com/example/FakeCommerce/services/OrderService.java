@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import com.example.FakeCommerce.adapters.OrderAdapter;
 import com.example.FakeCommerce.dtos.CreateOrderRequestDto;
 import com.example.FakeCommerce.dtos.GetOrderResponseDto;
+import com.example.FakeCommerce.dtos.UpdateOrderRequestDto;
+
 import java.util.stream.Collectors;
 import com.example.FakeCommerce.exceptions.ResourceNotFoundException;
 import com.example.FakeCommerce.repositories.OrderProductsRepository;
@@ -13,6 +15,7 @@ import java.util.function.Function;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import com.example.FakeCommerce.dtos.*;
 
 import com.example.FakeCommerce.schema.*;
 
@@ -71,6 +74,82 @@ public class OrderService {
                 }
                 orderProductsRepository.saveAll(orderProducts);
         }
+        return orderAdapter.mapToGetOrderResponseDto(order);
+    }
+
+    public GetOrderResponseDto updateOrder(Long id , UpdateOrderRequestDto updateOrderRequestDto){
+        Order order = orderRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("User Id not found"));
+
+        if(updateOrderRequestDto.getStatus()!=null){
+            order.setStatus(updateOrderRequestDto.getStatus());
+            orderRepository.save(order);
+        }
+
+        if(updateOrderRequestDto.getOrderItems() != null){
+            List<Long> productIds = updateOrderRequestDto.getOrderItems().stream().map(item -> item.getProductId()).collect(Collectors.toList());
+            List<Product> products = productRepository.findAllById(productIds);
+            Map<Long,Product> productMap = products.stream().collect(Collectors.toMap(Product::getId,Function.identity()));
+            for(var pid : productIds){
+                if(!productMap.containsKey(pid)){
+                    throw new ResourceNotFoundException("Product not found")
+                }
+            }
+
+            List<OrderProduct> toSave = new ArrayList<>();
+            List<OrderProduct> toDelete = new ArrayList<>();
+
+            Map<Long,OrderProduct> existingItems = orderProductsRepository.findByOrderWithProduct(order)
+            .stream().collect(Collectors.toMap(op->op.getProduct().getId(),Function.identity()));
+
+            for(OrderItemActionDto itemAction : updateOrderRequestDto.getOrderItems()){
+                Product product = productMap.get(itemAction.getProductId());
+                OrderProduct existing = existingItems.get(product.getId());
+                
+                switch(itemAction.getAction()){
+                    case ADD :
+                            if(existing != null){
+                                int addQty = (itemAction.getQuantity() != null ? itemAction.getQuantity() : 1);
+                                existing.setQuantity(existing.getQuantity() + addQty);
+                                toSave.add(existing);
+                            }else{
+                                OrderProduct newItem = OrderProduct.builder().order(order).product(product).quantity(itemAction.getQuantity() != null ? itemAction.getQuantity() : 1).build();
+                                existingItems.put(product.getId(),newItem);
+                            }
+                         
+                    case REMOVE :
+                            if(existing == null){
+                                throw new ResourceNotFoundException("Product not found with ID: " + product.getId());
+                            }
+                            toDelete.add(existing);
+                            existingItems.remove(product.getId());
+                    case INCREMENT :
+                        if(existing == null){
+                            throw new ResourceNotFoundException("Product not found with ID: " + product.getId());
+                        }
+                        existing.setQuantity(existing.getQuantity()+1);
+                        toSave.add(existing);
+                    case DECREMENT :
+                        if(existing == null){
+                            throw new ResourceNotFoundException("Product not found with ID: " + product.getId());
+                        }
+                        if(existing.getQuantity()<=1){
+                            toDelete.add(existing);
+                            existingItems.remove(product.getId());
+                        }else{
+                        existing.setQuantity(existing.getQuantity()-1);
+                        toSave.add(existing);
+                        }
+                }
+            }
+            if(!toSave.isEmpty()){
+                orderProductsRepository.saveAll(toSave);
+            }
+            if(!toDelete.isEmpty()){
+                orderProductsRepository.deleteAll(toDelete);
+            }
+        }
+
         return orderAdapter.mapToGetOrderResponseDto(order);
     }
 
