@@ -16,6 +16,6 @@ import lombok.NoArgsConstructor;
 @Setter
 @Builder
 public class CreateOrderRequestDto {
-    //private OrderStatus Status;
+    private OrderStatus Status;
     private List<OrderItemRequestDto> orderItems;
 }

@@ -92,7 +92,7 @@ public class OrderService {
             Map<Long,Product> productMap = products.stream().collect(Collectors.toMap(Product::getId,Function.identity()));
             for(var pid : productIds){
                 if(!productMap.containsKey(pid)){
-                    throw new ResourceNotFoundException("Product not found")
+                    throw new ResourceNotFoundException("Product not found");
                 }
             }
 
