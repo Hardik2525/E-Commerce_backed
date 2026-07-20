@@ -2,6 +2,8 @@ package com.example.FakeCommerce.controllers;
 
 import com.example.FakeCommerce.dtos.CreateOrderRequestDto;
 import com.example.FakeCommerce.dtos.GetOrderResponseDto;
+import com.example.FakeCommerce.dtos.GetOrderSummaryResponseDto;
+import com.example.FakeCommerce.dtos.UpdateOrderRequestDto;
 import com.example.FakeCommerce.schema.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,8 +36,8 @@ public class OrderController {
     }
 
     @PostMapping
-    public GetOrderResponseDto createOrder(@RequestBody CreateOrderRequestDto orderRequestDto){
-        return orderService.createOrder(orderRequestDto);
+    public ResponseEntity<ApiResponse<GetOrderResponseDto>> createOrder(@RequestBody CreateOrderRequestDto orderRequestDto){
+         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(orderService.createOrder(orderRequestDto),"Order created successfully"));
     }
 
     @DeleteMapping("/{id}")
@@ -50,18 +52,15 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(order,"Order fetched successfully"));
     }
 
-    @GetMapping("/user/{userId}")
-    public List<Order> getOrdersByUserId(@PathVariable Long userId) {
-        throw new UnsupportedOperationException("Not implemented");
-    }
-
     @PutMapping("/{id}")
-    public Order updateOrder(@PathVariable Long id) {
-        throw new UnsupportedOperationException("Not implemented");
+    public ResponseEntity<ApiResponse<GetOrderResponseDto>> updateOrder(@PathVariable Long id,@RequestBody UpdateOrderRequestDto updateOrderRequestDto) {
+        GetOrderResponseDto updatedOrder = orderService.updateOrder(id, updateOrderRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(updatedOrder,"Order updated successfully :"+ updatedOrder.getId() ));
     }
 
     @GetMapping("/{id}/summary")
-    public void getOrderSummary(@PathVariable Long id) {
-        throw new UnsupportedOperationException("Not implemented");
+    public ResponseEntity<ApiResponse<GetOrderSummaryResponseDto>> getOrderSummary(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK)
+        .body(ApiResponse.success(orderService.getOrderSummary(id),"Order summary fetched successfully"));
     }
 }

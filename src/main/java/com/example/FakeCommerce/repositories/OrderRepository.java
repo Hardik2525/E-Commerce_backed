@@ -10,5 +10,4 @@ import com.example.FakeCommerce.schema.Order;
 @Repository
 public interface OrderRepository extends JpaRepository<Order , Long> {
 
-    
 }

@@ -12,6 +12,7 @@ import com.example.FakeCommerce.repositories.OrderProductsRepository;
 import com.example.FakeCommerce.repositories.OrderRepository;
 import com.example.FakeCommerce.repositories.ProductRepository;
 import java.util.function.Function;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -157,5 +158,26 @@ public class OrderService {
         Order order = orderRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
         orderRepository.delete(order);
+    }
+
+    public GetOrderSummaryResponseDto getOrderSummary(Long id){
+        Order order = orderRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Order not found in DB"));
+        List<OrderProduct> orderProducts = orderProductsRepository.findByOrderWithProduct(order);
+
+        List<OrderItemResponseDto> items = orderAdapter.mapToOrderItemResponseDtos(orderProducts);
+
+        int totalItems = orderProducts.stream().mapToInt(OrderProduct::getQuantity).sum();
+        BigDecimal totalPrice = orderProducts.stream().map(op -> op.getProduct().getPrice().multiply(BigDecimal.valueOf(op.getQuantity())))
+        .reduce(BigDecimal.ZERO, BigDecimal::add); 
+
+        return GetOrderSummaryResponseDto.builder()
+        .id(order.getId())
+        .status(order.getStatus())
+        .items(items)
+        .totalItems(totalItems)
+        .totalprice(totalPrice)
+        .createdAt(order.getCreatedAt())
+        .updatedAt(order.getUpdatedAt())
+        .build();
     }
 }
