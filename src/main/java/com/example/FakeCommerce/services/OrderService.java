@@ -24,8 +24,10 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Builder
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class OrderService {
@@ -75,9 +77,11 @@ public class OrderService {
                 }
                 orderProductsRepository.saveAll(orderProducts);
         }
+        log.debug("Order and orderProduct created");
         return orderAdapter.mapToGetOrderResponseDto(order);
     }
 
+    @Transactional
     public GetOrderResponseDto updateOrder(Long id , UpdateOrderRequestDto updateOrderRequestDto){
         Order order = orderRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("User Id not found"));

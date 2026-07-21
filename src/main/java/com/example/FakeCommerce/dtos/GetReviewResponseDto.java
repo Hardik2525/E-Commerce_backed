@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class GetReviewResponseDto {
+    private Long reviewId;
     private BigDecimal rating;
     private String comment;
     private Long productId;

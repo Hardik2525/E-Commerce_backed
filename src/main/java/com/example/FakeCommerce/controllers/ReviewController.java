@@ -29,8 +29,9 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final ReviewAdapter reviewAdapter;
     @GetMapping
-    public List<Review> getAllReviews() {
-        throw new UnsupportedOperationException("Not implemented");
+    public ResponseEntity<ApiResponse<List<GetReviewResponseDto>>> getAllReviews() {
+        List<Review> reviews = reviewService.getAllReviews();
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(reviewAdapter.mapToReviewResponseDtoList(reviews), "Reviews fetched successfully"));
     }
 
     @PostMapping
@@ -40,22 +41,26 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteReview(@PathVariable Long id) {
-        throw new UnsupportedOperationException("Not implemented");
+    public ResponseEntity<ApiResponse<Void>> deleteReview(@PathVariable Long id) {
+        reviewService.deleteReview(id);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(null, "Review deleted successfully"));
     }
 
     @GetMapping("/{id}")
-    public Review getReviewById(@PathVariable Long id) {
-        throw new UnsupportedOperationException("Not implemented");
+    public ResponseEntity<ApiResponse<GetReviewResponseDto>> getReviewById(@PathVariable Long id) {
+        Review review = reviewService.getReviewById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(reviewAdapter.mapToReviewResponseDto(review), "Review fetched successfully"));
     }
 
     @GetMapping("/product/{productId}")
-    public List<Review> getReviewsByProductId(@PathVariable Long productId) {
-        throw new UnsupportedOperationException("Not implemented");
+    public ResponseEntity<ApiResponse<List<GetReviewResponseDto>>> getReviewsByProductId(@PathVariable Long productId) {
+        List<Review> reviews = reviewService.getReviewsByProductId(productId);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(reviewAdapter.mapToReviewResponseDtoList(reviews), "Reviews fetched successfully"));
     }
 
     @GetMapping("/order/{orderId}")
-    public List<Review> getReviewsByOrderId(@PathVariable Long orderId) {
-        throw new UnsupportedOperationException("Not implemented");
+    public ResponseEntity<ApiResponse<List<GetReviewResponseDto>>> getReviewsByOrderId(@PathVariable Long orderId) {
+        List<Review> reviews = reviewService.getReviewsByOrderId(orderId);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(reviewAdapter.mapToReviewResponseDtoList(reviews), "Reviews fetched successfully"));
     }
 }

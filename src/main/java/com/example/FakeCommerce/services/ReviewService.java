@@ -11,7 +11,7 @@ import com.example.FakeCommerce.repositories.ProductRepository;
 import com.example.FakeCommerce.repositories.ReviewRepository;
 import com.example.FakeCommerce.schema.Review;
 import com.example.FakeCommerce.schema.*;
-
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -34,4 +34,24 @@ public class ReviewService {
                         .build();
         return reviewRepository.save(review);
     }
+
+    public List<Review> getAllReviews(){
+        return reviewRepository.findAll();
+    }
+
+    public void deleteReview(Long id){
+        reviewRepository.deleteById(id);
+        }
+
+    public Review getReviewById(Long id){
+        return reviewRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Review not found in DB"));
+    }
+
+    public List<Review> getReviewsByProductId(Long productId){
+        return reviewRepository.findByProductId(productId);
+    } 
+
+    public List<Review> getReviewsByOrderId(Long orderId){
+        return reviewRepository.findByOrderId(orderId);
+    } 
 }
